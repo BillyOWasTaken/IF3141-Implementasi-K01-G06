@@ -1,0 +1,4 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_kintakun_region_user,kintakun.region user,model_kintakun_region,group_kintakun_user,1,0,0,0
+access_kintakun_region_manajer_sales,kintakun.region manajer sales,model_kintakun_region,group_manajer_sales,1,1,1,0
+access_kintakun_region_manajer_it,kintakun.region manajer it,model_kintakun_region,group_manajer_it,1,1,1,1

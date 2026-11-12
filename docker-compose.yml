@@ -1,13 +1,13 @@
 services:
   db:
-    image: postgres:16-alpine
+    image: postgres:18-alpine
     environment:
       POSTGRES_USER: ${POSTGRES_USER:?isi dulu di .env}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?isi dulu di .env}
       POSTGRES_DB: postgres # DB maintenance saja, DB aplikasi dibuat Odoo
       ODOO_DB_NAME: ${ODOO_DB_NAME:-odoo_app} # dibaca skrip backup/restore di dalam container
     volumes:
-      - odoo-db-data:/var/lib/postgresql/data
+      - odoo-db-data:/var/lib/postgresql
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d postgres"]
       interval: 5s
@@ -34,4 +34,4 @@ volumes:
   odoo-web-data:
     name: odoo-web-data
   odoo-db-data:
-    name: odoo-db-data
+    name: odoo-db-data-pg18

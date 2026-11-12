@@ -1,0 +1,20 @@
+{
+    "name": "Kintakun Base",
+    "summary": "Data master agen B2B, wilayah, katalog motif, dan role pengguna Kintakun",
+    "version": "17.0.1.0.0",
+    "license": "LGPL-3",
+    "author": "IF3141",
+    "category": "Sales",
+    "depends": ["mail", "contacts", "sale_management", "purchase", "stock", "account", "l10n_id"],
+    "application": True,
+    "data": [
+        "security/security.xml",
+        "security/ir.model.access.csv",
+        "data/sequence.xml",
+        "data/company.xml",
+        "views/region_views.xml",
+        "views/partner_views.xml",
+        "views/product_views.xml",
+        "views/menus.xml",
+    ],
+}

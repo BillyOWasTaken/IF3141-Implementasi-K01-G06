@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+    <record id="seq_kintakun_agent" model="ir.sequence">
+        <field name="name">Kode Agen Kintakun</field>
+        <field name="code">kintakun.agent</field>
+        <field name="prefix">AGN</field>
+        <field name="padding">4</field>
+        <field name="company_id" eval="False"/>
+    </record>
+</odoo>

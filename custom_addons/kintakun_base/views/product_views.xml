@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="product_template_view_form_kintakun" model="ir.ui.view">
+        <field name="name">product.template.form.kintakun</field>
+        <field name="model">product.template</field>
+        <field name="inherit_id" ref="product.product_template_form_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//group[@name='group_general']" position="inside">
+                <field name="kintakun_brand"/>
+                <field name="kintakun_motif"/>
+                <field name="kintakun_size"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="product_template_view_search_kintakun" model="ir.ui.view">
+        <field name="name">product.template.search.kintakun</field>
+        <field name="model">product.template</field>
+        <field name="inherit_id" ref="product.product_template_search_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//search" position="inside">
+                <field name="kintakun_motif"/>
+                <field name="kintakun_size"/>
+                <filter name="group_kintakun_brand" string="Merek"
+                        context="{'group_by': 'kintakun_brand'}"/>
+                <filter name="group_kintakun_motif" string="Motif"
+                        context="{'group_by': 'kintakun_motif'}"/>
+                <filter name="group_kintakun_size" string="Ukuran"
+                        context="{'group_by': 'kintakun_size'}"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="product_template_view_tree_kintakun" model="ir.ui.view">
+        <field name="name">product.template.tree.kintakun</field>
+        <field name="model">product.template</field>
+        <field name="priority">99</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="default_code"/>
+                <field name="name"/>
+                <field name="kintakun_brand"/>
+                <field name="kintakun_motif"/>
+                <field name="kintakun_size"/>
+                <field name="list_price" string="Harga Dasar"/>
+                <field name="qty_available" string="Stok Tersedia"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="kintakun_product_action" model="ir.actions.act_window">
+        <field name="name">Katalog Produk &amp; Motif</field>
+        <field name="res_model">product.template</field>
+        <field name="view_mode">tree,form,kanban</field>
+        <field name="domain">[('sale_ok', '=', True)]</field>
+        <field name="context">{'default_detailed_type': 'product', 'default_invoice_policy': 'delivery'}</field>
+        <field name="view_ids" eval="[(5, 0, 0),
+            (0, 0, {'view_mode': 'tree', 'view_id': ref('product_template_view_tree_kintakun')}),
+            (0, 0, {'view_mode': 'form', 'view_id': ref('product.product_template_only_form_view')}),
+        ]"/>
+    </record>
+</odoo>

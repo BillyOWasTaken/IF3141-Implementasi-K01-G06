@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="kintakun_region_view_tree" model="ir.ui.view">
+        <field name="name">kintakun.region.tree</field>
+        <field name="model">kintakun.region</field>
+        <field name="arch" type="xml">
+            <tree editable="bottom">
+                <field name="code"/>
+                <field name="name"/>
+                <field name="agent_count"/>
+                <field name="active" widget="boolean_toggle"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="kintakun_region_action" model="ir.actions.act_window">
+        <field name="name">Wilayah</field>
+        <field name="res_model">kintakun.region</field>
+        <field name="view_mode">tree</field>
+        <field name="context">{'active_test': False}</field>
+    </record>
+</odoo>

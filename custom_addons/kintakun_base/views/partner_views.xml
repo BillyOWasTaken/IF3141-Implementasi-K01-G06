@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="res_partner_view_form_kintakun" model="ir.ui.view">
+        <field name="name">res.partner.form.kintakun</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_partner_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//notebook" position="inside">
+                <page string="Agen B2B" name="kintakun_agent">
+                    <group>
+                        <group name="kintakun_agent_identity">
+                            <field name="is_kintakun_agent"/>
+                            <field name="agent_code" invisible="not is_kintakun_agent"
+                                   placeholder="Diisi otomatis"/>
+                        </group>
+                        <group name="kintakun_agent_class" invisible="not is_kintakun_agent">
+                            <field name="agent_tier" widget="radio" options="{'horizontal': true}"
+                                   required="is_kintakun_agent"/>
+                            <field name="agent_region_id" required="is_kintakun_agent"
+                                   options="{'no_create': True}"/>
+                        </group>
+                    </group>
+                </page>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="res_partner_view_tree_kintakun_agent" model="ir.ui.view">
+        <field name="name">res.partner.tree.kintakun.agent</field>
+        <field name="model">res.partner</field>
+        <field name="priority">99</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="agent_code"/>
+                <field name="name"/>
+                <field name="agent_region_id"/>
+                <field name="agent_tier" widget="badge"
+                       decoration-warning="agent_tier == 'prioritas'"
+                       decoration-info="agent_tier == 'reguler'"/>
+                <field name="phone"/>
+                <field name="city"/>
+                <field name="active" column_invisible="1"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="res_partner_view_search_kintakun" model="ir.ui.view">
+        <field name="name">res.partner.search.kintakun</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_res_partner_filter"/>
+        <field name="arch" type="xml">
+            <xpath expr="//search" position="inside">
+                <field name="agent_code"/>
+                <field name="agent_region_id"/>
+                <filter name="kintakun_agent" string="Agen B2B"
+                        domain="[('is_kintakun_agent', '=', True)]"/>
+                <filter name="kintakun_prioritas" string="Agen Prioritas"
+                        domain="[('agent_tier', '=', 'prioritas'), ('is_kintakun_agent', '=', True)]"/>
+                <filter name="group_agent_tier" string="Tier Agen"
+                        context="{'group_by': 'agent_tier'}"/>
+                <filter name="group_agent_region" string="Wilayah Agen"
+                        context="{'group_by': 'agent_region_id'}"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="kintakun_agent_action" model="ir.actions.act_window">
+        <field name="name">Agen B2B</field>
+        <field name="res_model">res.partner</field>
+        <field name="view_mode">tree,form,kanban</field>
+        <field name="domain">[('is_kintakun_agent', '=', True)]</field>
+        <field name="context">{
+            'default_is_kintakun_agent': True,
+            'default_is_company': True,
+            'default_customer_rank': 1,
+        }</field>
+        <field name="view_ids" eval="[(5, 0, 0),
+            (0, 0, {'view_mode': 'tree', 'view_id': ref('res_partner_view_tree_kintakun_agent')}),
+            (0, 0, {'view_mode': 'form', 'view_id': ref('base.view_partner_form')}),
+        ]"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">Daftarkan agen B2B pertama</p>
+        </field>
+    </record>
+</odoo>

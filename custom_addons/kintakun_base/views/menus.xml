@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <menuitem id="menu_kintakun_root" name="Kintakun B2B" sequence="1"
+              groups="group_kintakun_user"/>
+
+    <menuitem id="menu_kintakun_sales" name="Pesanan" parent="menu_kintakun_root" sequence="10"
+              groups="group_staf_sales"/>
+    <menuitem id="menu_kintakun_quotation" name="Penawaran" parent="menu_kintakun_sales"
+              action="sale.action_quotations_with_onboarding" sequence="10"/>
+    <menuitem id="menu_kintakun_sale_order" name="Sales Order" parent="menu_kintakun_sales"
+              action="sale.action_orders" sequence="20"/>
+
+    <menuitem id="menu_kintakun_procurement" name="Pengadaan" parent="menu_kintakun_root"
+              sequence="20" groups="group_manajer_procurement,group_direktur"/>
+    <menuitem id="menu_kintakun_rfq" name="Permintaan Penawaran (RFQ)"
+              parent="menu_kintakun_procurement" action="purchase.purchase_rfq" sequence="10"/>
+    <menuitem id="menu_kintakun_purchase_order" name="Purchase Order"
+              parent="menu_kintakun_procurement" action="purchase.purchase_form_action"
+              sequence="20"/>
+    <menuitem id="menu_kintakun_vendor" name="Vendor" parent="menu_kintakun_procurement"
+              action="account.res_partner_action_supplier" sequence="30"/>
+
+    <menuitem id="menu_kintakun_warehouse" name="Gudang" parent="menu_kintakun_root" sequence="30"
+              groups="group_staf_inventory,group_manajer_procurement,group_direktur"/>
+    <menuitem id="menu_kintakun_receipt" name="Penerimaan Barang" parent="menu_kintakun_warehouse"
+              action="stock.action_picking_tree_incoming" sequence="10"/>
+    <menuitem id="menu_kintakun_delivery" name="Pengiriman" parent="menu_kintakun_warehouse"
+              action="stock.action_picking_tree_outgoing" sequence="20"/>
+    <menuitem id="menu_kintakun_stock" name="Stok Fisik" parent="menu_kintakun_warehouse"
+              action="stock.action_view_inventory_tree" sequence="30"/>
+
+    <menuitem id="menu_kintakun_finance" name="Keuangan" parent="menu_kintakun_root" sequence="40"
+              groups="group_manajer_finance,group_direktur"/>
+    <menuitem id="menu_kintakun_customer_invoice" name="Faktur Pelanggan"
+              parent="menu_kintakun_finance" action="account.action_move_out_invoice_type"
+              sequence="10"/>
+    <menuitem id="menu_kintakun_vendor_bill" name="Tagihan Vendor" parent="menu_kintakun_finance"
+              action="account.action_move_in_invoice_type" sequence="20"/>
+    <menuitem id="menu_kintakun_customer_payment" name="Pembayaran Pelanggan"
+              parent="menu_kintakun_finance" action="account.action_account_payments"
+              sequence="30" groups="group_manajer_finance"/>
+    <menuitem id="menu_kintakun_vendor_payment" name="Pembayaran Vendor"
+              parent="menu_kintakun_finance" action="account.action_account_payments_payable"
+              sequence="40" groups="group_manajer_finance"/>
+    <menuitem id="menu_kintakun_journal_entries" name="Entri Jurnal" parent="menu_kintakun_finance"
+              action="account.action_move_journal_line" sequence="50"/>
+    <menuitem id="menu_kintakun_chart_of_accounts" name="Bagan Akun" parent="menu_kintakun_finance"
+              action="account.action_account_form" sequence="60" groups="group_manajer_finance"/>
+
+    <menuitem id="menu_kintakun_monitoring" name="Monitoring" parent="menu_kintakun_root"
+              sequence="50" groups="group_manajer_sales,group_manajer_procurement"/>
+    <menuitem id="menu_kintakun_sale_report" name="Analisis Penjualan"
+              parent="menu_kintakun_monitoring" action="sale.action_order_report_all"
+              sequence="10" groups="group_manajer_sales"/>
+    <menuitem id="menu_kintakun_purchase_report" name="Analisis Pembelian"
+              parent="menu_kintakun_monitoring" action="purchase.action_purchase_order_report_all"
+              sequence="20" groups="group_manajer_procurement,group_direktur"/>
+
+    <menuitem id="menu_kintakun_master" name="Data Master" parent="menu_kintakun_root" sequence="60"/>
+    <menuitem id="menu_kintakun_agent" name="Agen B2B" parent="menu_kintakun_master"
+              action="kintakun_agent_action" sequence="10"/>
+    <menuitem id="menu_kintakun_product" name="Katalog Produk &amp; Motif"
+              parent="menu_kintakun_master" action="kintakun_product_action" sequence="20"/>
+    <menuitem id="menu_kintakun_region" name="Wilayah" parent="menu_kintakun_master"
+              action="kintakun_region_action" sequence="30"/>
+
+    <menuitem id="menu_kintakun_config" name="Konfigurasi" parent="menu_kintakun_root" sequence="90"
+              groups="group_manajer_it"/>
+    <menuitem id="menu_kintakun_users" name="Pengguna &amp; Role" parent="menu_kintakun_config"
+              action="base.action_res_users" sequence="10"/>
+</odoo>
