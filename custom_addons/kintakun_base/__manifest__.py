@@ -9,9 +9,12 @@
     "application": True,
     "data": [
         "security/security.xml",
+        "security/users.xml",
         "security/ir.model.access.csv",
         "data/sequence.xml",
         "data/company.xml",
+        "data/products.xml",
+        "data/agents.xml",
         "views/region_views.xml",
         "views/partner_views.xml",
         "views/product_views.xml",

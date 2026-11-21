@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <!-- 1. Staf Sales -->
+        <record id="user_demo_staf_sales" model="res.users">
+            <field name="name">Staf Sales (Dummy)</field>
+            <field name="login">staf_sales</field>
+            <field name="password">kintakun123</field>
+            <field name="email">staf.sales@kintakun.local</field>
+            <field name="groups_id" eval="[(6, 0, [ref('group_staf_sales')])]"/>
+        </record>
+
+        <!-- 2. Manajer Sales -->
+        <record id="user_demo_manajer_sales" model="res.users">
+            <field name="name">Manajer Sales (Dummy)</field>
+            <field name="login">manajer_sales</field>
+            <field name="password">kintakun123</field>
+            <field name="email">manajer.sales@kintakun.local</field>
+            <field name="groups_id" eval="[(6, 0, [ref('group_manajer_sales')])]"/>
+        </record>
+
+        <!-- 3. Staf Inventory -->
+        <record id="user_demo_staf_inventory" model="res.users">
+            <field name="name">Staf Inventory (Dummy)</field>
+            <field name="login">staf_inventory</field>
+            <field name="password">kintakun123</field>
+            <field name="email">staf.inventory@kintakun.local</field>
+            <field name="groups_id" eval="[(6, 0, [ref('group_staf_inventory')])]"/>
+        </record>
+
+        <!-- 4. Manajer Inventory -->
+        <record id="user_demo_manajer_inventory" model="res.users">
+            <field name="name">Manajer Inventory (Dummy)</field>
+            <field name="login">manajer_inventory</field>
+            <field name="password">kintakun123</field>
+            <field name="email">manajer.inventory@kintakun.local</field>
+            <field name="groups_id" eval="[(6, 0, [ref('group_manajer_inventory')])]"/>
+        </record>
+
+        <!-- 5. Manajer Procurement -->
+        <record id="user_demo_manajer_procurement" model="res.users">
+            <field name="name">Manajer Procurement (Dummy)</field>
+            <field name="login">manajer_procurement</field>
+            <field name="password">kintakun123</field>
+            <field name="email">manajer.procurement@kintakun.local</field>
+            <field name="groups_id" eval="[(6, 0, [ref('group_manajer_procurement')])]"/>
+        </record>
+
+        <!-- 6. Manajer Finance -->
+        <record id="user_demo_manajer_finance" model="res.users">
+            <field name="name">Manajer Finance (Dummy)</field>
+            <field name="login">manajer_finance</field>
+            <field name="password">kintakun123</field>
+            <field name="email">manajer.finance@kintakun.local</field>
+            <field name="groups_id" eval="[(6, 0, [ref('group_manajer_finance')])]"/>
+        </record>
+
+        <!-- 7. Direktur Utama -->
+        <record id="user_demo_direktur" model="res.users">
+            <field name="name">Direktur Utama (Dummy)</field>
+            <field name="login">direktur</field>
+            <field name="password">kintakun123</field>
+            <field name="email">direktur@kintakun.local</field>
+            <field name="groups_id" eval="[(6, 0, [ref('group_direktur')])]"/>
+        </record>
+
+        <!-- 8. Manajer IT -->
+        <record id="user_demo_manajer_it" model="res.users">
+            <field name="name">Manajer IT (Dummy)</field>
+            <field name="login">manajer_it</field>
+            <field name="password">kintakun123</field>
+            <field name="email">manajer.it@kintakun.local</field>
+            <field name="groups_id" eval="[(6, 0, [ref('group_manajer_it')])]"/>
+        </record>
+    </data>
+</odoo>

@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <!-- 1. Wilayah (kintakun.region) -->
+        <record id="region_jawa_barat" model="kintakun.region">
+            <field name="name">Jawa Barat</field>
+            <field name="code">JABAR</field>
+        </record>
+
+        <record id="region_jabodetabek" model="kintakun.region">
+            <field name="name">Jabodetabek</field>
+            <field name="code">JKT</field>
+        </record>
+
+        <record id="region_jawa_timur" model="kintakun.region">
+            <field name="name">Jawa Timur</field>
+            <field name="code">JATIM</field>
+        </record>
+
+        <record id="region_sumatera" model="kintakun.region">
+            <field name="name">Sumatera</field>
+            <field name="code">SUM</field>
+        </record>
+
+        <!-- 2. Agen B2B Prioritas -->
+        <record id="agent_kintakun_bandung_jaya" model="res.partner">
+            <field name="name">CV Bandung Sprei Jaya</field>
+            <field name="is_company" eval="True"/>
+            <field name="customer_rank">1</field>
+            <field name="is_kintakun_agent" eval="True"/>
+            <field name="agent_tier">prioritas</field>
+            <field name="agent_region_id" ref="region_jawa_barat"/>
+            <field name="street">Jl. Soekarno-Hatta No. 412</field>
+            <field name="city">Bandung</field>
+            <field name="phone">+62 22 7301122</field>
+            <field name="email">order@bandungspreijaya.co.id</field>
+        </record>
+
+        <record id="agent_kintakun_jakarta_textile" model="res.partner">
+            <field name="name">PT Mitra Tekstil Nusantara</field>
+            <field name="is_company" eval="True"/>
+            <field name="customer_rank">1</field>
+            <field name="is_kintakun_agent" eval="True"/>
+            <field name="agent_tier">prioritas</field>
+            <field name="agent_region_id" ref="region_jabodetabek"/>
+            <field name="street">Jl. Mangga Dua Raya No. 88</field>
+            <field name="city">Jakarta Pusat</field>
+            <field name="phone">+62 21 6124455</field>
+            <field name="email">purchasing@mitratekstil.id</field>
+        </record>
+
+        <!-- 3. Agen B2B Reguler -->
+        <record id="agent_kintakun_surabaya_bedding" model="res.partner">
+            <field name="name">Toko Grosir Tidur Nyaman</field>
+            <field name="is_company" eval="True"/>
+            <field name="customer_rank">1</field>
+            <field name="is_kintakun_agent" eval="True"/>
+            <field name="agent_tier">reguler</field>
+            <field name="agent_region_id" ref="region_jawa_timur"/>
+            <field name="street">Jl. Pasar Atom Tahap II No. 15</field>
+            <field name="city">Surabaya</field>
+            <field name="phone">+62 31 3528899</field>
+            <field name="email">admin@tidurnyaman.co.id</field>
+        </record>
+
+        <record id="agent_kintakun_medan_home" model="res.partner">
+            <field name="name">UD Indah Home Living</field>
+            <field name="is_company" eval="True"/>
+            <field name="customer_rank">1</field>
+            <field name="is_kintakun_agent" eval="True"/>
+            <field name="agent_tier">reguler</field>
+            <field name="agent_region_id" ref="region_sumatera"/>
+            <field name="street">Jl. Sutomo No. 104</field>
+            <field name="city">Medan</field>
+            <field name="phone">+62 61 4567788</field>
+            <field name="email">indahhomeliving@gmail.com</field>
+        </record>
+    </data>
+</odoo>

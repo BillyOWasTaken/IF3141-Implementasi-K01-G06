@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <!-- 1. Kintakun Lite -->
+        <record id="product_kintakun_lite_aisyah_queen" model="product.template">
+            <field name="name">Sprei Kintakun Lite - Aisyah (160x200)</field>
+            <field name="default_code">KTK-LT-ASY-160</field>
+            <field name="detailed_type">product</field>
+            <field name="sale_ok" eval="True"/>
+            <field name="purchase_ok" eval="True"/>
+            <field name="invoice_policy">delivery</field>
+            <field name="kintakun_brand">lite</field>
+            <field name="kintakun_motif">Aisyah</field>
+            <field name="kintakun_size">160x200 (Queen)</field>
+            <field name="list_price">85000.0</field>
+            <field name="standard_price">52000.0</field>
+            <field name="categ_id" ref="product.product_category_all"/>
+        </record>
+
+        <record id="product_kintakun_lite_bima_single" model="product.template">
+            <field name="name">Sprei Kintakun Lite - Bima (120x200)</field>
+            <field name="default_code">KTK-LT-BIM-120</field>
+            <field name="detailed_type">product</field>
+            <field name="sale_ok" eval="True"/>
+            <field name="purchase_ok" eval="True"/>
+            <field name="invoice_policy">delivery</field>
+            <field name="kintakun_brand">lite</field>
+            <field name="kintakun_motif">Bima</field>
+            <field name="kintakun_size">120x200 (Single)</field>
+            <field name="list_price">69000.0</field>
+            <field name="standard_price">41000.0</field>
+            <field name="categ_id" ref="product.product_category_all"/>
+        </record>
+
+        <!-- 2. Kintakun D'Luxe -->
+        <record id="product_kintakun_deluxe_kirana_king" model="product.template">
+            <field name="name">Sprei Kintakun D'Luxe - Kirana (180x200)</field>
+            <field name="default_code">KTK-DLX-KRN-180</field>
+            <field name="detailed_type">product</field>
+            <field name="sale_ok" eval="True"/>
+            <field name="purchase_ok" eval="True"/>
+            <field name="invoice_policy">delivery</field>
+            <field name="kintakun_brand">deluxe</field>
+            <field name="kintakun_motif">Kirana</field>
+            <field name="kintakun_size">180x200 (King)</field>
+            <field name="list_price">125000.0</field>
+            <field name="standard_price">78000.0</field>
+            <field name="categ_id" ref="product.product_category_all"/>
+        </record>
+
+        <record id="product_kintakun_deluxe_nadira_queen" model="product.template">
+            <field name="name">Bedcover Set Kintakun D'Luxe - Nadira (160x200)</field>
+            <field name="default_code">KTK-DLX-NDR-160BC</field>
+            <field name="detailed_type">product</field>
+            <field name="sale_ok" eval="True"/>
+            <field name="purchase_ok" eval="True"/>
+            <field name="invoice_policy">delivery</field>
+            <field name="kintakun_brand">deluxe</field>
+            <field name="kintakun_motif">Nadira</field>
+            <field name="kintakun_size">160x200 (Queen)</field>
+            <field name="list_price">310000.0</field>
+            <field name="standard_price">195000.0</field>
+            <field name="categ_id" ref="product.product_category_all"/>
+        </record>
+
+        <!-- 3. Kintakun Luxury -->
+        <record id="product_kintakun_luxury_celeste_king" model="product.template">
+            <field name="name">Sprei Kintakun Luxury - Celeste Tencel (180x200)</field>
+            <field name="default_code">KTK-LUX-CLS-180</field>
+            <field name="detailed_type">product</field>
+            <field name="sale_ok" eval="True"/>
+            <field name="purchase_ok" eval="True"/>
+            <field name="invoice_policy">delivery</field>
+            <field name="kintakun_brand">luxury</field>
+            <field name="kintakun_motif">Celeste</field>
+            <field name="kintakun_size">180x200 (King)</field>
+            <field name="list_price">450000.0</field>
+            <field name="standard_price">280000.0</field>
+            <field name="categ_id" ref="product.product_category_all"/>
+        </record>
+
+        <!-- 4. Kintakun Beglance -->
+        <record id="product_kintakun_beglance_aurelia_extra_king" model="product.template">
+            <field name="name">Bedcover Set Kintakun Beglance - Aurelia Jacquard (200x200)</field>
+            <field name="default_code">KTK-BGL-AUR-200BC</field>
+            <field name="detailed_type">product</field>
+            <field name="sale_ok" eval="True"/>
+            <field name="purchase_ok" eval="True"/>
+            <field name="invoice_policy">delivery</field>
+            <field name="kintakun_brand">beglance</field>
+            <field name="kintakun_motif">Aurelia</field>
+            <field name="kintakun_size">200x200 (Extra King)</field>
+            <field name="list_price">680000.0</field>
+            <field name="standard_price">420000.0</field>
+            <field name="categ_id" ref="product.product_category_all"/>
+        </record>
+    </data>
+</odoo>
