@@ -25,7 +25,7 @@ class TestMenus(KintakunCommon):
             self.user_manajer_sales: {"sales", "monitoring", "master"},
             self.user_staf_inventory: {"warehouse", "master"},
             self.user_manajer_procurement: {"procurement", "warehouse", "monitoring", "master"},
-            self.user_manajer_finance: {"finance", "master"},
+            self.user_manajer_finance: {"finance", "monitoring", "master"},
             self.user_direktur: {
                 "sales", "procurement", "warehouse", "finance", "monitoring", "master",
             },

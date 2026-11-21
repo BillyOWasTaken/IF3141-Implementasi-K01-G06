@@ -10,6 +10,11 @@ class ResCompany(models.Model):
         rupiah = self.env.ref("base.IDR")
         rupiah.active = True
         for company in self.search([]):
+            if company.name == "My Company":
+                company.name = "Kintakun"
+            self.env["stock.warehouse"].search(
+                [("company_id", "=", company.id), ("name", "=", "My Company")]
+            ).write({"name": "Gudang Kintakun"})
             if not company.country_id or company.country_id.code == "US":
                 company.country_id = indonesia
             if company.currency_id != rupiah and not self.env["account.move.line"].search_count(

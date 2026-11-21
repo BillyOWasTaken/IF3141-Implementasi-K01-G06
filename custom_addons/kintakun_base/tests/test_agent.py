@@ -50,3 +50,14 @@ class TestAgentMaster(KintakunCommon):
         self.assertEqual(self.env.company.country_id, self.env.ref("base.id"))
         order = self.env["sale.order"].create({"partner_id": self.agent_reguler.id})
         self.assertEqual(order.currency_id, self.env.ref("base.IDR"))
+
+    def test_role_selection_switches_access(self):
+        user = self.user_staf_sales
+        self.assertEqual(user.kintakun_role, "staf_sales")
+        user.with_user(self.user_manajer_it).kintakun_role = "staf_inventory"
+        self.assertEqual(user.kintakun_role, "staf_inventory")
+        self.assertTrue(user.has_group("stock.group_stock_user"))
+        self.assertFalse(user.has_group("kintakun_base.group_staf_sales"))
+        self.assertFalse(user.has_group("sales_team.group_sale_salesman_all_leads"))
+        self.assertTrue(user.has_group("base.group_user"))
+        self.assertTrue(user.has_group("product.group_discount_per_so_line"))

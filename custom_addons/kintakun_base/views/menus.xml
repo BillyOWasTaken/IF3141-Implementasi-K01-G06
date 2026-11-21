@@ -48,7 +48,8 @@
               action="account.action_account_form" sequence="60" groups="group_manajer_finance"/>
 
     <menuitem id="menu_kintakun_monitoring" name="Monitoring" parent="menu_kintakun_root"
-              sequence="50" groups="group_manajer_sales,group_manajer_procurement"/>
+              sequence="50"
+              groups="group_manajer_sales,group_manajer_procurement,group_manajer_inventory,group_manajer_finance"/>
     <menuitem id="menu_kintakun_sale_report" name="Analisis Penjualan"
               parent="menu_kintakun_monitoring" action="sale.action_order_report_all"
               sequence="10" groups="group_manajer_sales"/>

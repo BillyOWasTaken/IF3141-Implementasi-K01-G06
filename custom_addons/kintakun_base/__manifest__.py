@@ -18,6 +18,7 @@
         "views/region_views.xml",
         "views/partner_views.xml",
         "views/product_views.xml",
+        "views/users_views.xml",
         "views/menus.xml",
     ],
 }
