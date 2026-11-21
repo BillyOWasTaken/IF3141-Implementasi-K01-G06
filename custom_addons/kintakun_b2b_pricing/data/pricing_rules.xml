@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <record id="rule_tier_reguler" model="kintakun.pricing.rule">
+            <field name="name">Diskon Agen Reguler 5%</field>
+            <field name="rule_type">tier</field>
+            <field name="agent_tier">reguler</field>
+            <field name="discount_percent">5</field>
+            <field name="state">approved</field>
+            <field name="proposed_by_id" ref="kintakun_base.user_demo_manajer_sales"/>
+            <field name="approved_by_id" ref="kintakun_base.user_demo_direktur"/>
+            <field name="approved_date" eval="DateTime.now()"/>
+        </record>
+        <record id="rule_tier_prioritas" model="kintakun.pricing.rule">
+            <field name="name">Diskon Agen Prioritas 7%</field>
+            <field name="rule_type">tier</field>
+            <field name="agent_tier">prioritas</field>
+            <field name="discount_percent">7</field>
+            <field name="state">approved</field>
+            <field name="proposed_by_id" ref="kintakun_base.user_demo_manajer_sales"/>
+            <field name="approved_by_id" ref="kintakun_base.user_demo_direktur"/>
+            <field name="approved_date" eval="DateTime.now()"/>
+        </record>
+        <record id="rule_promo_akhir_tahun" model="kintakun.pricing.rule">
+            <field name="name">Promo Musiman Akhir Tahun 3%</field>
+            <field name="rule_type">promo</field>
+            <field name="agent_tier">all</field>
+            <field name="discount_percent">3</field>
+            <field name="region_quota">100</field>
+            <field name="date_start" eval="(DateTime.today() - relativedelta(days=7)).strftime('%Y-%m-%d')"/>
+            <field name="date_end" eval="(DateTime.today() + relativedelta(days=60)).strftime('%Y-%m-%d')"/>
+            <field name="state">submitted</field>
+            <field name="proposed_by_id" ref="kintakun_base.user_demo_manajer_sales"/>
+        </record>
+    </data>
+    <function model="kintakun.pricing.rule" name="_sync_pricelists"/>
+</odoo>

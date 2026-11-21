@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="stock_picking_view_form_kintakun" model="ir.ui.view">
+        <field name="name">stock.picking.form.kintakun</field>
+        <field name="model">stock.picking</field>
+        <field name="inherit_id" ref="stock.view_picking_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//header/button[@name='button_validate'][1]" position="attributes">
+                <attribute name="invisible">state in ('draft', 'confirmed', 'done', 'cancel') or (kintakun_is_b2b and picking_type_code == 'outgoing' and kintakun_check_state != 'checked')</attribute>
+            </xpath>
+            <xpath expr="//header/button[@name='button_validate'][2]" position="attributes">
+                <attribute name="invisible">state in ('waiting', 'assigned', 'done', 'cancel') or (kintakun_is_b2b and picking_type_code == 'outgoing' and kintakun_check_state != 'checked')</attribute>
+            </xpath>
+            <xpath expr="//header/button[@name='button_validate'][1]" position="before">
+                <field name="kintakun_is_b2b" invisible="1"/>
+                <button name="action_kintakun_start_check" string="Mulai Pemeriksaan" type="object"
+                        class="oe_highlight" groups="kintakun_base.group_staf_inventory"
+                        invisible="not kintakun_is_b2b or picking_type_code != 'outgoing' or state != 'assigned' or kintakun_check_state not in ('waiting', 'failed')"/>
+                <button name="action_kintakun_open_scan" string="Pindai Barang" type="object"
+                        groups="kintakun_base.group_staf_inventory"
+                        invisible="kintakun_check_state != 'checking'"/>
+                <button name="action_kintakun_finish_check" string="Selesaikan Pemeriksaan"
+                        type="object" class="oe_highlight"
+                        groups="kintakun_base.group_staf_inventory"
+                        invisible="kintakun_check_state != 'checking'"/>
+            </xpath>
+            <xpath expr="//field[@name='origin']" position="after">
+                <field name="kintakun_agent_tier" widget="badge" invisible="not kintakun_is_b2b"
+                       decoration-warning="kintakun_agent_tier == 'prioritas'"
+                       decoration-info="kintakun_agent_tier == 'reguler'"/>
+                <field name="kintakun_queue_number" invisible="not kintakun_is_b2b"/>
+                <field name="kintakun_check_state" widget="badge" invisible="not kintakun_is_b2b"
+                       decoration-success="kintakun_check_state in ('checked', 'validated')"
+                       decoration-danger="kintakun_check_state == 'failed'"
+                       decoration-info="kintakun_check_state == 'checking'"/>
+            </xpath>
+            <xpath expr="//page[@name='operations']" position="after">
+                <page string="Fulfillment Check" name="kintakun_fulfillment"
+                      invisible="not kintakun_is_b2b or picking_type_code != 'outgoing'">
+                    <div class="alert alert-info" role="status"
+                         invisible="kintakun_check_state != 'waiting'">
+                        Klik "Mulai Pemeriksaan" setelah pengiriman berstatus Ready, lalu cocokkan
+                        motif, ukuran, dan kuantitas fisik dengan rincian SO.
+                    </div>
+                    <div class="alert alert-danger" role="alert"
+                         invisible="kintakun_check_state != 'failed'">
+                        Pemeriksaan tidak sesuai. Surat jalan ditahan sampai pemeriksaan diulang
+                        dan seluruh barang cocok.
+                    </div>
+                    <field name="kintakun_check_line_ids"
+                           readonly="kintakun_check_state != 'checking'">
+                        <tree editable="bottom" create="0" delete="0"
+                              decoration-success="result == 'match'"
+                              decoration-danger="result == 'mismatch'">
+                            <field name="product_id" readonly="1"/>
+                            <field name="kintakun_motif"/>
+                            <field name="kintakun_size"/>
+                            <field name="qty_demand"/>
+                            <field name="qty_checked"/>
+                            <field name="product_ok"/>
+                            <field name="result" widget="badge"
+                                   decoration-success="result == 'match'"
+                                   decoration-danger="result == 'mismatch'"/>
+                            <field name="note"/>
+                        </tree>
+                    </field>
+                    <group>
+                        <group>
+                            <field name="kintakun_checker_id"/>
+                            <field name="kintakun_check_date"/>
+                        </group>
+                        <group>
+                            <field name="kintakun_check_note"
+                                   readonly="kintakun_check_state in ('validated',)"/>
+                        </group>
+                    </group>
+                </page>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="stock_picking_view_tree_kintakun_queue" model="ir.ui.view">
+        <field name="name">stock.picking.tree.kintakun.queue</field>
+        <field name="model">stock.picking</field>
+        <field name="priority">99</field>
+        <field name="arch" type="xml">
+            <tree default_order="priority desc, kintakun_queue_number, id" create="0"
+                  decoration-muted="state == 'cancel'">
+                <field name="priority" widget="priority" nolabel="1" readonly="1"/>
+                <field name="kintakun_queue_number" string="Antrean"/>
+                <field name="name" string="No. Pengiriman"/>
+                <field name="origin" string="No. SO"/>
+                <field name="partner_id" string="Agen"/>
+                <field name="kintakun_agent_tier" widget="badge"
+                       decoration-warning="kintakun_agent_tier == 'prioritas'"
+                       decoration-info="kintakun_agent_tier == 'reguler'"/>
+                <field name="scheduled_date"/>
+                <field name="kintakun_check_state" widget="badge"
+                       decoration-success="kintakun_check_state in ('checked', 'validated')"
+                       decoration-danger="kintakun_check_state == 'failed'"
+                       decoration-info="kintakun_check_state == 'checking'"/>
+                <field name="state" widget="badge"
+                       decoration-success="state == 'done'"
+                       decoration-info="state == 'assigned'"
+                       decoration-warning="state in ('confirmed', 'waiting')"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="stock_picking_view_search_kintakun" model="ir.ui.view">
+        <field name="name">stock.picking.search.kintakun</field>
+        <field name="model">stock.picking</field>
+        <field name="inherit_id" ref="stock.view_picking_internal_search"/>
+        <field name="arch" type="xml">
+            <xpath expr="//search" position="inside">
+                <filter name="kintakun_b2b" string="Pesanan Agen B2B"
+                        domain="[('kintakun_is_b2b', '=', True)]"/>
+                <filter name="kintakun_to_check" string="Perlu Diperiksa"
+                        domain="[('kintakun_is_b2b', '=', True), ('state', '=', 'assigned'), ('kintakun_check_state', 'in', ('waiting', 'checking', 'failed'))]"/>
+                <filter name="kintakun_check_failed" string="Tidak Sesuai"
+                        domain="[('kintakun_check_state', '=', 'failed')]"/>
+                <filter name="kintakun_open" string="Belum Selesai"
+                        domain="[('state', 'not in', ('done', 'cancel'))]"/>
+                <filter name="group_kintakun_check_state" string="Status Fulfillment Check"
+                        context="{'group_by': 'kintakun_check_state'}"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="kintakun_delivery_queue_action" model="ir.actions.act_window">
+        <field name="name">Antrean Pengiriman Prioritas</field>
+        <field name="res_model">stock.picking</field>
+        <field name="view_mode">tree,form</field>
+        <field name="domain">[('kintakun_is_b2b', '=', True), ('picking_type_code', '=', 'outgoing')]</field>
+        <field name="context">{'search_default_kintakun_open': 1, 'contact_display': 'partner_address'}</field>
+        <field name="search_view_id" ref="stock.view_picking_internal_search"/>
+        <field name="view_ids" eval="[(5, 0, 0),
+            (0, 0, {'view_mode': 'tree', 'view_id': ref('stock_picking_view_tree_kintakun_queue')}),
+            (0, 0, {'view_mode': 'form', 'view_id': ref('stock.view_picking_form')}),
+        ]"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">Belum ada pengiriman pesanan agen</p>
+            <p>Pengiriman terbentuk otomatis saat sales order agen dikonfirmasi.</p>
+        </field>
+    </record>
+</odoo>

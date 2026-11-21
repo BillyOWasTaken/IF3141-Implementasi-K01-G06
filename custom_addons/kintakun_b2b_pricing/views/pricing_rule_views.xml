@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="kintakun_pricing_rule_view_form" model="ir.ui.view">
+        <field name="name">kintakun.pricing.rule.form</field>
+        <field name="model">kintakun.pricing.rule</field>
+        <field name="arch" type="xml">
+            <form>
+                <header>
+                    <button name="action_submit" string="Ajukan Persetujuan" type="object"
+                            class="oe_highlight" invisible="state != 'draft'"
+                            groups="kintakun_base.group_manajer_sales"/>
+                    <button name="action_approve" string="Setujui" type="object"
+                            class="oe_highlight" invisible="state != 'submitted'"
+                            groups="kintakun_base.group_direktur"/>
+                    <button name="action_reject" string="Tolak" type="object"
+                            invisible="state != 'submitted'"
+                            groups="kintakun_base.group_direktur"/>
+                    <button name="action_reset_draft" string="Kembalikan ke Draf" type="object"
+                            invisible="state != 'rejected'"
+                            groups="kintakun_base.group_manajer_sales"/>
+                    <button name="action_create_revision" string="Buat Revisi" type="object"
+                            invisible="state != 'approved' or not active"
+                            groups="kintakun_base.group_manajer_sales"/>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,submitted,approved"/>
+                </header>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_view_orders" type="object" class="oe_stat_button"
+                                icon="fa-shopping-cart" invisible="state != 'approved'">
+                            <field name="order_count" widget="statinfo" string="Sales Order"/>
+                        </button>
+                    </div>
+                    <widget name="web_ribbon" title="Diarsipkan" bg_color="text-bg-danger"
+                            invisible="active"/>
+                    <field name="active" invisible="1"/>
+                    <div class="oe_title">
+                        <label for="name"/>
+                        <h1><field name="name" readonly="state != 'draft'"
+                                   placeholder="mis. Diskon Agen Prioritas 7%"/></h1>
+                    </div>
+                    <group>
+                        <group string="Ketentuan">
+                            <field name="rule_type" readonly="state != 'draft'"/>
+                            <field name="agent_tier" readonly="state != 'draft'"/>
+                            <field name="discount_percent" readonly="state != 'draft'"/>
+                        </group>
+                        <group string="Kuota &amp; Periode">
+                            <field name="region_quota" readonly="state != 'draft'"/>
+                            <field name="quota_used" invisible="state != 'approved' or not region_quota"/>
+                            <field name="date_start" readonly="state != 'draft'"
+                                   invisible="rule_type != 'promo'" required="rule_type == 'promo'"/>
+                            <field name="date_end" readonly="state != 'draft'"
+                                   invisible="rule_type != 'promo'" required="rule_type == 'promo'"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Persetujuan" name="approval">
+                            <group>
+                                <group>
+                                    <field name="proposed_by_id"/>
+                                    <field name="approved_by_id"/>
+                                    <field name="approved_date"/>
+                                    <field name="revision_of_id" invisible="not revision_of_id"/>
+                                </group>
+                                <group>
+                                    <field name="rejection_reason"
+                                           invisible="state not in ('submitted', 'rejected')"
+                                           readonly="state != 'submitted'"
+                                           placeholder="Diisi Direktur Utama sebelum menolak"/>
+                                </group>
+                            </group>
+                        </page>
+                        <page string="Pricelist Aktif" name="pricelist" invisible="state != 'approved'">
+                            <field name="pricelist_item_ids">
+                                <tree create="0" delete="0" edit="0">
+                                    <field name="pricelist_id"/>
+                                    <field name="percent_price" string="Diskon Pricelist (%)"/>
+                                    <field name="date_start"/>
+                                    <field name="date_end"/>
+                                </tree>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids"/>
+                    <field name="activity_ids"/>
+                    <field name="message_ids"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <record id="kintakun_pricing_rule_view_tree" model="ir.ui.view">
+        <field name="name">kintakun.pricing.rule.tree</field>
+        <field name="model">kintakun.pricing.rule</field>
+        <field name="arch" type="xml">
+            <tree decoration-muted="state == 'rejected'" decoration-info="state == 'submitted'">
+                <field name="name"/>
+                <field name="rule_type"/>
+                <field name="agent_tier"/>
+                <field name="discount_percent"/>
+                <field name="region_quota" optional="show"/>
+                <field name="date_start" optional="show"/>
+                <field name="date_end" optional="show"/>
+                <field name="proposed_by_id" optional="hide"/>
+                <field name="approved_by_id" optional="hide"/>
+                <field name="state" widget="badge"
+                       decoration-success="state == 'approved'"
+                       decoration-info="state == 'submitted'"
+                       decoration-danger="state == 'rejected'"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="kintakun_pricing_rule_view_search" model="ir.ui.view">
+        <field name="name">kintakun.pricing.rule.search</field>
+        <field name="model">kintakun.pricing.rule</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name"/>
+                <filter name="submitted" string="Menunggu Persetujuan"
+                        domain="[('state', '=', 'submitted')]"/>
+                <filter name="approved" string="Disetujui" domain="[('state', '=', 'approved')]"/>
+                <filter name="draft" string="Draf" domain="[('state', '=', 'draft')]"/>
+                <separator/>
+                <filter name="tier" string="Diskon Tier" domain="[('rule_type', '=', 'tier')]"/>
+                <filter name="promo" string="Promo Musiman" domain="[('rule_type', '=', 'promo')]"/>
+                <separator/>
+                <filter name="inactive" string="Diarsipkan" domain="[('active', '=', False)]"/>
+                <group expand="0" string="Kelompokkan">
+                    <filter name="group_state" string="Status" context="{'group_by': 'state'}"/>
+                    <filter name="group_type" string="Jenis" context="{'group_by': 'rule_type'}"/>
+                    <filter name="group_tier" string="Tier" context="{'group_by': 'agent_tier'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="kintakun_pricing_rule_action" model="ir.actions.act_window">
+        <field name="name">Aturan Harga</field>
+        <field name="res_model">kintakun.pricing.rule</field>
+        <field name="view_mode">tree,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">Buat usulan aturan harga</p>
+            <p>Aturan baru mengubah pricelist agen setelah disetujui Direktur Utama.</p>
+        </field>
+    </record>
+
+    <record id="kintakun_pricing_rule_action_approval" model="ir.actions.act_window">
+        <field name="name">Persetujuan Aturan Harga</field>
+        <field name="res_model">kintakun.pricing.rule</field>
+        <field name="view_mode">tree,form</field>
+        <field name="context">{'search_default_submitted': 1}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">Tidak ada usulan yang menunggu persetujuan</p>
+        </field>
+    </record>
+
+    <record id="kintakun_pricelist_action" model="ir.actions.act_window">
+        <field name="name">Pricelist Agen</field>
+        <field name="res_model">product.pricelist</field>
+        <field name="view_mode">tree,form</field>
+        <field name="domain">[('kintakun_tier', '!=', False)]</field>
+        <field name="context">{'create': False}</field>
+    </record>
+</odoo>

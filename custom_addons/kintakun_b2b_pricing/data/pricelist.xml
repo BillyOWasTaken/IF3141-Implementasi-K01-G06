@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+    <record id="pricelist_agen_reguler" model="product.pricelist">
+        <field name="name">Kintakun - Agen Reguler</field>
+        <field name="kintakun_tier">reguler</field>
+        <field name="discount_policy">without_discount</field>
+        <field name="sequence">20</field>
+    </record>
+    <record id="pricelist_agen_prioritas" model="product.pricelist">
+        <field name="name">Kintakun - Agen Prioritas</field>
+        <field name="kintakun_tier">prioritas</field>
+        <field name="discount_policy">without_discount</field>
+        <field name="sequence">21</field>
+    </record>
+</odoo>

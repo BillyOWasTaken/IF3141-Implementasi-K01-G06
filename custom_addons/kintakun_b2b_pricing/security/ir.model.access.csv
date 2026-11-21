@@ -1,0 +1,10 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_kintakun_pricing_rule_user,kintakun.pricing.rule user,model_kintakun_pricing_rule,kintakun_base.group_kintakun_user,1,0,0,0
+access_kintakun_pricing_rule_manajer_sales,kintakun.pricing.rule manajer sales,model_kintakun_pricing_rule,kintakun_base.group_manajer_sales,1,1,1,1
+access_kintakun_check_line_user,kintakun.fulfillment.check.line user,model_kintakun_fulfillment_check_line,kintakun_base.group_kintakun_user,1,0,0,0
+access_kintakun_check_line_staf_inventory,kintakun.fulfillment.check.line staf inventory,model_kintakun_fulfillment_check_line,kintakun_base.group_staf_inventory,1,1,1,0
+access_kintakun_check_line_manajer_it,kintakun.fulfillment.check.line manajer it,model_kintakun_fulfillment_check_line,kintakun_base.group_manajer_it,1,1,1,1
+access_kintakun_fulfillment_scan_staf_inventory,kintakun.fulfillment.scan staf inventory,model_kintakun_fulfillment_scan,kintakun_base.group_staf_inventory,1,1,1,1
+access_kintakun_sync_log_user,kintakun.sync.log user,model_kintakun_sync_log,kintakun_base.group_kintakun_user,1,0,0,0
+access_kintakun_sync_log_manajer_it,kintakun.sync.log manajer it,model_kintakun_sync_log,kintakun_base.group_manajer_it,1,0,0,1
+access_kintakun_stock_monitor_user,kintakun.stock.monitor user,model_kintakun_stock_monitor,kintakun_base.group_kintakun_user,1,0,0,0

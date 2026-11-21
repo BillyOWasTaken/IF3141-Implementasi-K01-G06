@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="res_partner_view_form_kintakun_pricing" model="ir.ui.view">
+        <field name="name">res.partner.form.kintakun.pricing</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="kintakun_base.res_partner_view_form_kintakun"/>
+        <field name="arch" type="xml">
+            <xpath expr="//group[@name='kintakun_agent_class']" position="inside">
+                <field name="property_product_pricelist" string="Pricelist Agen" readonly="1"
+                       options="{'no_open': True}"/>
+                <field name="currency_id" invisible="1"/>
+                <field name="kintakun_receivable"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="res_partner_view_tree_kintakun_agent_pricing" model="ir.ui.view">
+        <field name="name">res.partner.tree.kintakun.agent.pricing</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="kintakun_base.res_partner_view_tree_kintakun_agent"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='agent_tier']" position="after">
+                <field name="property_product_pricelist" string="Pricelist" optional="show"/>
+            </xpath>
+            <xpath expr="//field[@name='city']" position="after">
+                <field name="currency_id" column_invisible="1"/>
+                <field name="kintakun_receivable" sum="Total Piutang"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

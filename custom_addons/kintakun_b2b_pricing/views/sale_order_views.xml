@@ -1,0 +1,181 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="sale_order_view_form_kintakun" model="ir.ui.view">
+        <field name="name">sale.order.form.kintakun</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_order_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//button[@id='action_confirm']" position="before">
+                <button name="action_kintakun_reprice" string="Hitung Ulang Harga" type="object"
+                        invisible="not kintakun_is_b2b or state not in ('draft', 'sent')"/>
+            </xpath>
+            <xpath expr="//div[@name='button_box']" position="inside">
+                <button name="action_view_kintakun_sync_logs" type="object" class="oe_stat_button"
+                        icon="fa-exchange" invisible="kintakun_sync_log_count == 0">
+                    <field name="kintakun_sync_log_count" widget="statinfo" string="Log Sinkron"/>
+                </button>
+            </xpath>
+            <xpath expr="//div[@name='button_box']" position="before">
+                <field name="kintakun_is_b2b" invisible="1"/>
+                <field name="kintakun_quota_exceeded" invisible="1"/>
+                <field name="kintakun_sync_failed" invisible="1"/>
+                <div class="alert alert-danger" role="alert" invisible="not kintakun_quota_exceeded">
+                    <field name="kintakun_quota_message" readonly="1"/>
+                </div>
+                <div class="alert alert-warning" role="alert"
+                     invisible="not kintakun_is_b2b or kintakun_pricing_state == 'applied' or state not in ('draft', 'sent')">
+                    Pricelist agen belum diterapkan atau belum ada aturan harga tier yang disetujui
+                    Direktur Utama. Klik "Hitung Ulang Harga"; pesanan belum dapat dikonfirmasi.
+                </div>
+                <div class="alert alert-danger" role="alert" invisible="not kintakun_sync_failed">
+                    Sinkronisasi faktur ke modul keuangan gagal. Lihat Log Sinkron dan minta
+                    Manajer Finance menjalankan "Sinkron Ulang".
+                </div>
+            </xpath>
+            <xpath expr="//field[@name='pricelist_id'][not(@invisible)]" position="attributes">
+                <attribute name="readonly">state in ['cancel', 'sale'] or kintakun_is_b2b</attribute>
+            </xpath>
+            <xpath expr="//button[@name='action_update_prices']" position="attributes">
+                <attribute name="invisible">kintakun_is_b2b or not show_update_pricelist or state in ['sale', 'cancel']</attribute>
+            </xpath>
+            <xpath expr="//group[@name='order_details']" position="inside">
+                <field name="kintakun_agent_tier" widget="badge" invisible="not kintakun_is_b2b"
+                       decoration-warning="kintakun_agent_tier == 'prioritas'"
+                       decoration-info="kintakun_agent_tier == 'reguler'"/>
+                <field name="kintakun_agent_region_id" invisible="not kintakun_is_b2b"
+                       options="{'no_open': True}"/>
+                <field name="kintakun_pricing_state" widget="badge" invisible="not kintakun_is_b2b"
+                       decoration-success="kintakun_pricing_state == 'applied'"
+                       decoration-muted="kintakun_pricing_state == 'draft'"/>
+                <field name="kintakun_priority" widget="priority" readonly="1"
+                       invisible="not kintakun_is_b2b"/>
+                <field name="kintakun_queue_number" invisible="not kintakun_queue_number"/>
+            </xpath>
+            <xpath expr="//field[@name='order_line']/tree/field[@name='product_uom_qty']" position="before">
+                <field name="kintakun_motif" optional="show" column_invisible="not parent.kintakun_is_b2b"/>
+                <field name="kintakun_size" optional="show" column_invisible="not parent.kintakun_is_b2b"/>
+                <field name="kintakun_stock_available" optional="show"
+                       column_invisible="not parent.kintakun_is_b2b"
+                       decoration-danger="kintakun_stock_available &lt; product_uom_qty"/>
+            </xpath>
+            <xpath expr="//field[@name='order_line']/tree/field[@name='price_unit']" position="attributes">
+                <attribute name="readonly">qty_invoiced &gt; 0 or parent.kintakun_is_b2b</attribute>
+            </xpath>
+            <xpath expr="//field[@name='order_line']/tree/field[@name='discount']" position="attributes">
+                <attribute name="readonly">parent.kintakun_is_b2b</attribute>
+            </xpath>
+            <xpath expr="//page[@name='other_information']" position="before">
+                <page string="Harga Khusus" name="kintakun_pricing" invisible="not kintakun_is_b2b">
+                    <group>
+                        <group string="Aturan Diterapkan">
+                            <field name="kintakun_tier_rule_id" options="{'no_open': True}"/>
+                            <field name="kintakun_tier_discount"/>
+                            <field name="kintakun_promo_rule_id" options="{'no_open': True}"/>
+                            <field name="kintakun_promo_discount"/>
+                        </group>
+                        <group string="Rincian Kalkulasi">
+                            <field name="kintakun_amount_gross"/>
+                            <field name="kintakun_tier_discount_amount"/>
+                            <field name="kintakun_promo_discount_amount"/>
+                            <field name="amount_untaxed" string="Subtotal Setelah Diskon"/>
+                            <field name="amount_tax" string="Pajak"/>
+                            <field name="amount_total" string="Harga Akhir"/>
+                        </group>
+                    </group>
+                </page>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="sale_order_view_form_kintakun_b2b" model="ir.ui.view">
+        <field name="name">sale.order.form.kintakun.b2b</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_order_form"/>
+        <field name="mode">primary</field>
+        <field name="priority">99</field>
+        <field name="arch" type="xml">
+            <xpath expr="//group[@name='partner_details']/field[@name='partner_id']" position="attributes">
+                <attribute name="domain">[('is_kintakun_agent', '=', True), ('company_id', 'in', (False, company_id))]</attribute>
+                <attribute name="string">Agen B2B</attribute>
+                <attribute name="placeholder">Cari agen B2B...</attribute>
+                <attribute name="options">{'no_create': True}</attribute>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="sale_order_view_tree_kintakun_b2b" model="ir.ui.view">
+        <field name="name">sale.order.tree.kintakun.b2b</field>
+        <field name="model">sale.order</field>
+        <field name="priority">99</field>
+        <field name="arch" type="xml">
+            <tree default_order="kintakun_priority desc, kintakun_queue_number, id desc"
+                  decoration-muted="state == 'cancel'">
+                <field name="kintakun_priority" widget="priority" readonly="1" nolabel="1"/>
+                <field name="kintakun_queue_number" string="Antrean" optional="show"/>
+                <field name="name"/>
+                <field name="date_order"/>
+                <field name="partner_id" string="Agen"/>
+                <field name="kintakun_agent_tier" widget="badge"
+                       decoration-warning="kintakun_agent_tier == 'prioritas'"
+                       decoration-info="kintakun_agent_tier == 'reguler'"/>
+                <field name="kintakun_agent_region_id" optional="show"/>
+                <field name="pricelist_id" optional="hide"/>
+                <field name="kintakun_pricing_state" widget="badge" optional="show"
+                       decoration-success="kintakun_pricing_state == 'applied'"/>
+                <field name="kintakun_tier_discount_amount" sum="Total" optional="hide"/>
+                <field name="kintakun_promo_discount_amount" sum="Total" optional="hide"/>
+                <field name="amount_total" sum="Total" widget="monetary"/>
+                <field name="currency_id" column_invisible="1"/>
+                <field name="delivery_status" widget="badge" optional="show"/>
+                <field name="invoice_status" widget="badge" optional="show"/>
+                <field name="state" widget="badge"
+                       decoration-success="state == 'sale'" decoration-info="state == 'draft'"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="sale_order_view_search_kintakun" model="ir.ui.view">
+        <field name="name">sale.order.search.kintakun</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_sales_order_filter"/>
+        <field name="arch" type="xml">
+            <xpath expr="//search" position="inside">
+                <field name="kintakun_agent_region_id"/>
+                <filter name="kintakun_b2b" string="Pesanan Agen B2B"
+                        domain="[('kintakun_is_b2b', '=', True)]"/>
+                <filter name="kintakun_prioritas" string="Agen Prioritas"
+                        domain="[('kintakun_agent_tier', '=', 'prioritas')]"/>
+                <filter name="kintakun_quotation" string="Penawaran"
+                        domain="[('state', 'in', ('draft', 'sent'))]"/>
+                <filter name="kintakun_confirmed" string="SO Terbit" domain="[('state', '=', 'sale')]"/>
+                <filter name="group_kintakun_tier" string="Tier Agen"
+                        context="{'group_by': 'kintakun_agent_tier'}"/>
+                <filter name="group_kintakun_region" string="Wilayah Agen"
+                        context="{'group_by': 'kintakun_agent_region_id'}"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="kintakun_b2b_order_action" model="ir.actions.act_window">
+        <field name="name">Pesanan Agen B2B</field>
+        <field name="res_model">sale.order</field>
+        <field name="view_mode">tree,form</field>
+        <field name="domain">[('kintakun_is_b2b', '=', True)]</field>
+        <field name="search_view_id" ref="sale.view_sales_order_filter"/>
+        <field name="view_ids" eval="[(5, 0, 0),
+            (0, 0, {'view_mode': 'tree', 'view_id': ref('sale_order_view_tree_kintakun_b2b')}),
+            (0, 0, {'view_mode': 'form', 'view_id': ref('sale_order_view_form_kintakun_b2b')}),
+        ]"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">Catat pesanan agen B2B pertama</p>
+            <p>Pilih agen, tambahkan motif dan ukuran, lalu simpan. Harga khusus dihitung dari pricelist agen.</p>
+        </field>
+    </record>
+
+    <record id="kintakun_b2b_quick_entry_action" model="ir.actions.act_window">
+        <field name="name">Quick-Entry Pesanan Agen</field>
+        <field name="res_model">sale.order</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="sale_order_view_form_kintakun_b2b"/>
+    </record>
+</odoo>

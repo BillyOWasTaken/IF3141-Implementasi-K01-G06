@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="kintakun_stock_monitor_view_tree" model="ir.ui.view">
+        <field name="name">kintakun.stock.monitor.tree</field>
+        <field name="model">kintakun.stock.monitor</field>
+        <field name="arch" type="xml">
+            <tree decoration-danger="stock_status == 'short'"
+                  decoration-warning="stock_status == 'low'">
+                <field name="product_id"/>
+                <field name="kintakun_brand" optional="show"/>
+                <field name="kintakun_motif"/>
+                <field name="kintakun_size"/>
+                <field name="qty_on_hand" sum="Total"/>
+                <field name="qty_reserved" sum="Total"/>
+                <field name="qty_available" sum="Total"/>
+                <field name="qty_open_demand" sum="Total"/>
+                <field name="qty_delivered" sum="Total" optional="show"/>
+                <field name="qty_shortage" sum="Total"/>
+                <field name="stock_status" widget="badge"
+                       decoration-success="stock_status == 'ok'"
+                       decoration-warning="stock_status == 'low'"
+                       decoration-danger="stock_status == 'short'"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="kintakun_stock_monitor_view_pivot" model="ir.ui.view">
+        <field name="name">kintakun.stock.monitor.pivot</field>
+        <field name="model">kintakun.stock.monitor</field>
+        <field name="arch" type="xml">
+            <pivot>
+                <field name="kintakun_motif" type="row"/>
+                <field name="kintakun_size" type="col"/>
+                <field name="qty_available" type="measure"/>
+                <field name="qty_open_demand" type="measure"/>
+            </pivot>
+        </field>
+    </record>
+
+    <record id="kintakun_stock_monitor_view_graph" model="ir.ui.view">
+        <field name="name">kintakun.stock.monitor.graph</field>
+        <field name="model">kintakun.stock.monitor</field>
+        <field name="arch" type="xml">
+            <graph type="bar">
+                <field name="product_id"/>
+                <field name="qty_shortage" type="measure"/>
+            </graph>
+        </field>
+    </record>
+
+    <record id="kintakun_stock_monitor_view_search" model="ir.ui.view">
+        <field name="name">kintakun.stock.monitor.search</field>
+        <field name="model">kintakun.stock.monitor</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="product_id"/>
+                <field name="kintakun_motif"/>
+                <field name="kintakun_size"/>
+                <filter name="shortage" string="Perlu Pengadaan" domain="[('qty_shortage', '&gt;', 0)]"/>
+                <filter name="low" string="Stok Menipis" domain="[('stock_status', '=', 'low')]"/>
+                <filter name="open_demand" string="Ada Pesanan Terbuka"
+                        domain="[('qty_open_demand', '&gt;', 0)]"/>
+                <group expand="0" string="Kelompokkan">
+                    <filter name="group_brand" string="Merek" context="{'group_by': 'kintakun_brand'}"/>
+                    <filter name="group_motif" string="Motif" context="{'group_by': 'kintakun_motif'}"/>
+                    <filter name="group_size" string="Ukuran" context="{'group_by': 'kintakun_size'}"/>
+                    <filter name="group_status" string="Status Stok" context="{'group_by': 'stock_status'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="kintakun_stock_monitor_action" model="ir.actions.act_window">
+        <field name="name">Pemantauan Stok &amp; Pemenuhan</field>
+        <field name="res_model">kintakun.stock.monitor</field>
+        <field name="view_mode">tree,pivot,graph</field>
+    </record>
+
+    <record id="kintakun_procurement_need_action" model="ir.actions.act_window">
+        <field name="name">Kebutuhan Pengadaan</field>
+        <field name="res_model">kintakun.stock.monitor</field>
+        <field name="view_mode">tree,graph,pivot</field>
+        <field name="context">{'search_default_shortage': 1}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">Tidak ada kebutuhan pengadaan</p>
+            <p>Seluruh pesanan agen yang terbit dapat dipenuhi dari stok saat ini.</p>
+        </field>
+    </record>
+
+    <record id="sale_order_view_pivot_kintakun" model="ir.ui.view">
+        <field name="name">sale.order.pivot.kintakun</field>
+        <field name="model">sale.order</field>
+        <field name="priority">99</field>
+        <field name="arch" type="xml">
+            <pivot>
+                <field name="kintakun_agent_region_id" type="row"/>
+                <field name="kintakun_agent_tier" type="col"/>
+                <field name="amount_total" type="measure"/>
+                <field name="kintakun_tier_discount_amount" type="measure"/>
+                <field name="kintakun_promo_discount_amount" type="measure"/>
+            </pivot>
+        </field>
+    </record>
+
+    <record id="sale_order_view_graph_kintakun" model="ir.ui.view">
+        <field name="name">sale.order.graph.kintakun</field>
+        <field name="model">sale.order</field>
+        <field name="priority">99</field>
+        <field name="arch" type="xml">
+            <graph type="bar" stacked="1">
+                <field name="date_order" interval="month"/>
+                <field name="kintakun_agent_tier"/>
+                <field name="amount_total" type="measure"/>
+            </graph>
+        </field>
+    </record>
+
+    <record id="kintakun_sale_analysis_action" model="ir.actions.act_window">
+        <field name="name">Analisis Pesanan B2B</field>
+        <field name="res_model">sale.order</field>
+        <field name="view_mode">pivot,graph</field>
+        <field name="domain">[('kintakun_is_b2b', '=', True), ('state', '=', 'sale')]</field>
+        <field name="view_ids" eval="[(5, 0, 0),
+            (0, 0, {'view_mode': 'pivot', 'view_id': ref('sale_order_view_pivot_kintakun')}),
+            (0, 0, {'view_mode': 'graph', 'view_id': ref('sale_order_view_graph_kintakun')}),
+        ]"/>
+    </record>
+
+    <record id="stock_picking_view_graph_kintakun" model="ir.ui.view">
+        <field name="name">stock.picking.graph.kintakun</field>
+        <field name="model">stock.picking</field>
+        <field name="priority">99</field>
+        <field name="arch" type="xml">
+            <graph type="pie">
+                <field name="kintakun_check_state"/>
+            </graph>
+        </field>
+    </record>
+
+    <record id="kintakun_fulfillment_analysis_action" model="ir.actions.act_window">
+        <field name="name">Status Pemenuhan Pesanan</field>
+        <field name="res_model">stock.picking</field>
+        <field name="view_mode">graph,tree,form</field>
+        <field name="domain">[('kintakun_is_b2b', '=', True), ('picking_type_code', '=', 'outgoing'), ('state', '!=', 'cancel')]</field>
+        <field name="view_ids" eval="[(5, 0, 0),
+            (0, 0, {'view_mode': 'graph', 'view_id': ref('stock_picking_view_graph_kintakun')}),
+            (0, 0, {'view_mode': 'tree', 'view_id': ref('stock_picking_view_tree_kintakun_queue')}),
+            (0, 0, {'view_mode': 'form', 'view_id': ref('stock.view_picking_form')}),
+        ]"/>
+    </record>
+
+    <record id="kintakun_receivable_action" model="ir.actions.act_window">
+        <field name="name">Piutang per Agen</field>
+        <field name="res_model">res.partner</field>
+        <field name="view_mode">tree,form</field>
+        <field name="domain">[('is_kintakun_agent', '=', True)]</field>
+        <field name="context">{'create': False}</field>
+        <field name="view_ids" eval="[(5, 0, 0),
+            (0, 0, {'view_mode': 'tree', 'view_id': ref('kintakun_base.res_partner_view_tree_kintakun_agent')}),
+            (0, 0, {'view_mode': 'form', 'view_id': ref('base.view_partner_form')}),
+        ]"/>
+    </record>
+</odoo>
